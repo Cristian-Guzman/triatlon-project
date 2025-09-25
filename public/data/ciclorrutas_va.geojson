@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-75.5812, 6.2518],
+          [-75.5798, 6.2501],
+          [-75.5785, 6.2485]
+        ]
+      },
+      "properties": {
+        "name": "Cicloruta Poblado",
+        "type": "bike",
+        "provider": "MEDELLIN"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-75.5650, 6.2442],
+          [-75.5635, 6.2428],
+          [-75.5620, 6.2415]
+        ]
+      },
+      "properties": {
+        "name": "Cicloruta Envigado",
+        "type": "bike",
+        "provider": "MEDELLIN"
+      }
+    }
+  ]
+}

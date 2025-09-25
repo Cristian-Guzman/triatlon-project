@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-75.5664, 6.2677],
+          [-75.5650, 6.2658],
+          [-75.5635, 6.2640]
+        ]
+      },
+      "properties": {
+        "name": "Ciclovía Dominical Zona Rosa",
+        "type": "ciclovia",
+        "provider": "INDER",
+        "horario": "Domingos 7:00 AM - 2:00 PM",
+        "distancia_km": 2.5
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-75.5743, 6.2442],
+          [-75.5728, 6.2425],
+          [-75.5713, 6.2408]
+        ]
+      },
+      "properties": {
+        "name": "Ciclovía Nocturna El Poblado",
+        "type": "ciclovia",
+        "provider": "INDER",
+        "horario": "Miércoles 7:00 PM - 10:00 PM",
+        "distancia_km": 3.2
+      }
+    }
+  ]
+}
