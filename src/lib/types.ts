@@ -18,8 +18,6 @@ export interface LayerVisibility {
   ciclorrutas: boolean;
   ciclovias: boolean;
   swimming: boolean;
-  metro: boolean;
-  google: boolean;
 }
 
 export interface EnCiclaStation {
