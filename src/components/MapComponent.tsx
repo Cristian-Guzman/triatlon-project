@@ -26,8 +26,6 @@ import {
   useCiclorrutas,
   useCicloviasInder,
   useInderVenues,
-  useMetroStations,
-  useGooglePlaces,
 } from '@/lib/hooks';
 
 // Import Mapbox CSS
@@ -50,17 +48,15 @@ export default function MapComponent() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [mapboxTokenError, setMapboxTokenError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  
+
   const [layerVisibility, setLayerVisibility] = useState<LayerVisibility>({
     encicla: true,
     ciclorrutas: true,
     ciclovias: true,
     swimming: true,
-    metro: true,
-    google: true,
   });
 
-  // Ensure component is mounted before doing anything
+ // Ensure component is mounted before doing anything
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -70,8 +66,6 @@ export default function MapComponent() {
   const { data: ciclorrutasData, isLoading: ciclorrutasLoading } = useCiclorrutas();
   const { data: cicloviasData, isLoading: cicloviasLoading } = useCicloviasInder();
   const { data: inderData, isLoading: inderLoading } = useInderVenues();
-  const { data: metroData, isLoading: metroLoading } = useMetroStations();
-  const { data: googleData, isLoading: googleLoading } = useGooglePlaces();
 
   // Initialize map
   useEffect(() => {
@@ -332,142 +326,7 @@ export default function MapComponent() {
         });
       }
     }
-
-    // Add Metro stations
-    if (metroData && !metroLoading) {
-      if (map.current.getSource('metro')) {
-        (map.current.getSource('metro') as mapboxgl.GeoJSONSource).setData(metroData);
-      } else {
-        map.current.addSource('metro', {
-          type: 'geojson',
-          data: metroData,
-        });
-
-        map.current.addLayer({
-          id: 'metro-points',
-          type: 'circle',
-          source: 'metro',
-          paint: {
-            'circle-radius': 8,
-            'circle-color': '#E91E63',
-            'circle-stroke-width': 3,
-            'circle-stroke-color': '#fff',
-            'circle-opacity': 0.9,
-          },
-        });
-
-        map.current.on('click', 'metro-points', (e) => {
-          if (e.features && e.features[0]) {
-            const feature = e.features[0];
-            const coordinates = (feature.geometry as GeoJSON.Point).coordinates as [number, number];
-            const properties = feature.properties;
-
-            new mapboxgl.Popup()
-              .setLngLat(coordinates)
-              .setHTML(`
-                <div>
-                  <h3>${properties?.name}</h3>
-                  <p><strong>Tipo:</strong> Estación Metro (${properties?.provider})</p>
-                </div>
-              `)
-              .addTo(map.current!);
-          }
-        });
-
-        map.current.on('mouseenter', 'metro-points', () => {
-          if (map.current) {
-            map.current.getCanvas().style.cursor = 'pointer';
-          }
-        });
-
-        map.current.on('mouseleave', 'metro-points', () => {
-          if (map.current) {
-            map.current.getCanvas().style.cursor = '';
-          }
-        });
-      }
-    }
-
-    // Add Google Places data
-    if (googleData && !googleLoading && map.current.getSource('google-places')) {
-      const source = map.current.getSource('google-places') as mapboxgl.GeoJSONSource;
-      source.setData(googleData);
-    } else if (googleData && !googleLoading) {
-      if (map.current.getLayer('google-places-points')) {
-        map.current.removeLayer('google-places-points');
-      }
-      if (map.current.getSource('google-places')) {
-        map.current.removeSource('google-places');
-      } else {
-        map.current.addSource('google-places', {
-          type: 'geojson',
-          data: googleData,
-        });
-
-        map.current.addLayer({
-          id: 'google-places-points',
-          type: 'circle',
-          source: 'google-places',
-          paint: {
-            'circle-radius': [
-              'case',
-              ['==', ['get', 'type'], 'swim'], 10,
-              ['==', ['get', 'type'], 'run'], 10,
-              8 // fitness/multi
-            ],
-            'circle-color': [
-              'case',
-              ['==', ['get', 'type'], 'swim'], '#2196F3', // Blue for swimming
-              ['==', ['get', 'type'], 'run'], '#FF9800',   // Orange for running
-              '#9C27B0' // Purple for fitness/multi
-            ],
-            'circle-stroke-width': 3,
-            'circle-stroke-color': '#fff',
-            'circle-opacity': 0.9,
-          },
-        });
-
-        map.current.on('click', 'google-places-points', (e) => {
-          if (e.features && e.features[0]) {
-            const feature = e.features[0];
-            const coordinates = (feature.geometry as GeoJSON.Point).coordinates as [number, number];
-            const properties = feature.properties;
-
-            const typeLabels: Record<string, string> = {
-              swim: 'Natación',
-              run: 'Atletismo',
-              multi: 'Fitness/Multi-deporte'
-            };
-
-            new mapboxgl.Popup()
-              .setLngLat(coordinates)
-              .setHTML(`
-                <div>
-                  <h3>${properties?.name}</h3>
-                  <p><strong>Tipo:</strong> ${typeLabels[properties?.type] || 'Fitness'} (${properties?.provider})</p>
-                  ${properties?.rating ? `<p><strong>Rating:</strong> ⭐ ${properties.rating} (${properties.user_ratings_total || 0} reviews)</p>` : ''}
-                  ${properties?.vicinity ? `<p><strong>Dirección:</strong> ${properties.vicinity}</p>` : ''}
-                  ${typeof properties?.open_now === 'boolean' ? `<p><strong>Estado:</strong> ${properties.open_now ? '🟢 Abierto' : '🔴 Cerrado'}</p>` : ''}
-                </div>
-              `)
-              .addTo(map.current!);
-          }
-        });
-
-        map.current.on('mouseenter', 'google-places-points', () => {
-          if (map.current) {
-            map.current.getCanvas().style.cursor = 'pointer';
-          }
-        });
-
-        map.current.on('mouseleave', 'google-places-points', () => {
-          if (map.current) {
-            map.current.getCanvas().style.cursor = '';
-          }
-        });
-      }
-    }
-  }, [mapLoaded, enciclaData, enciclaLoading, ciclorrutasData, ciclorrutasLoading, cicloviasData, cicloviasLoading, inderData, inderLoading, metroData, metroLoading, googleData, googleLoading]);
+  }, [mapLoaded, enciclaData, enciclaLoading, ciclorrutasData, ciclorrutasLoading, cicloviasData, cicloviasLoading, inderData, inderLoading]);
 
   // Handle layer visibility
   useEffect(() => {
@@ -497,16 +356,6 @@ export default function MapComponent() {
             map.current!.setLayoutProperty('inder-venues-points', 'visibility', visibility);
           }
           break;
-        case 'metro':
-          if (map.current!.getLayer('metro-points')) {
-            map.current!.setLayoutProperty('metro-points', 'visibility', visibility);
-          }
-          break;
-        case 'google':
-          if (map.current!.getLayer('google-places-points')) {
-            map.current!.setLayoutProperty('google-places-points', 'visibility', visibility);
-          }
-          break;
       }
     });
   }, [layerVisibility, mapLoaded]);
@@ -523,7 +372,7 @@ export default function MapComponent() {
     console.log('Searching for:', searchTerm);
   };
 
-  // Don't render anything until mounted (prevents hydration mismatch)
+   // Don't render anything until mounted (prevents hydration mismatch)
   if (!isMounted) {
     return (
       <div style={{ 
@@ -681,28 +530,6 @@ export default function MapComponent() {
             }
             label="Escenarios Deportivos"
           />
-          
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.metro}
-                onChange={() => handleLayerToggle('metro')}
-                color="primary"
-              />
-            }
-            label="Estaciones Metro"
-          />
-          
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.google}
-                onChange={() => handleLayerToggle('google')}
-                color="primary"
-              />
-            }
-            label="Google Places (Fitness & Deportes)"
-          />
         </Paper>
 
         {/* Legend */}
@@ -743,22 +570,6 @@ export default function MapComponent() {
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#9C27B0' }} />
               <Typography variant="caption">Multi-deporte</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#E91E63' }} />
-              <Typography variant="caption">Metro</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#2196F3', border: '2px solid #000' }} />
-              <Typography variant="caption">Google: Natación</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#FF9800', border: '2px solid #000' }} />
-              <Typography variant="caption">Google: Atletismo</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#9C27B0', border: '2px solid #000' }} />
-              <Typography variant="caption">Google: Fitness</Typography>
             </Box>
           </Box>
         </Paper>
@@ -804,25 +615,8 @@ export default function MapComponent() {
             </Typography>
           </Box>
 
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">5. Estaciones Metro de Medellín</Typography>
-            <Typography variant="body2">
-              Fuente: Metro de Medellín - Portal de Datos Abiertos
-            </Typography>
-          </Box>
-
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">6. Google Places API</Typography>
-            <Typography variant="body2">
-              Fuente: Google Places API - Lugares de fitness, piscinas, pistas de atletismo y gimnasios en Medellín
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              Incluye ratings, horarios, y información actualizada de usuarios de Google.
-            </Typography>
-          </Box>
-
           <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            Los datos se actualizan periódicamente desde las fuentes oficiales. La información de Google Places se actualiza en tiempo real.
+            Los datos se actualizan periódicamente desde las fuentes oficiales.
           </Typography>
         </DialogContent>
         <DialogActions>

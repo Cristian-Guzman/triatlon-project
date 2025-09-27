@@ -33,10 +33,3 @@ export interface InderVenue {
   longitud: number;
   enlace?: string;
 }
-
-export interface MetroStation {
-  estacion?: string;
-  nombre?: string;
-  latitud: number;
-  longitud: number;
-}
