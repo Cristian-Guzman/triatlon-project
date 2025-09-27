@@ -18,8 +18,6 @@ export interface LayerVisibility {
   ciclorrutas: boolean;
   ciclovias: boolean;
   swimming: boolean;
-  metro: boolean;
-  google: boolean;
 }
 
 export interface EnCiclaStation {
@@ -34,11 +32,4 @@ export interface InderVenue {
   latitud: number;
   longitud: number;
   enlace?: string;
-}
-
-export interface MetroStation {
-  estacion?: string;
-  nombre?: string;
-  latitud: number;
-  longitud: number;
 }
