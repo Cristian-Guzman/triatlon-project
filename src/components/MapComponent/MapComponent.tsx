@@ -3,22 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Paper,
-  FormControlLabel,
-  Switch,
   Box,
-  TextField,
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Link,
-  Snackbar,
-  Alert,
 } from '@mui/material';
 import { LayerVisibility } from '@/lib/types';
 import {
@@ -27,6 +12,14 @@ import {
   useCicloviasInder,
   useInderVenues,
 } from '@/lib/hooks';
+
+// Import components
+import AppBar from './AppBar';
+import MapControls from './MapControls';
+import MapLegend from './MapLegend';
+import DataSourcesDialog from './DataSourcesDialog';
+import DisclaimerSnackbar from './DisclaimerSnackbar';
+import MapboxTokenError from './MapboxTokenError';
 
 // Import Mapbox CSS
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -46,14 +39,14 @@ export default function MapComponent() {
   const [searchTerm, setSearchTerm] = useState('');
   const [dataSourcesOpen, setDataSourcesOpen] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [mapboxTokenError, setMapboxTokenError] = useState(false);
+  const [hasMapboxTokenError, setHasMapboxTokenError] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
   const [layerVisibility, setLayerVisibility] = useState<LayerVisibility>({
     encicla: true,
     ciclorrutas: true,
     ciclovias: true,
-    swimming: true,
+    swimming: false,
   });
 
  // Ensure component is mounted before doing anything
@@ -75,7 +68,7 @@ export default function MapComponent() {
     
     if (!mapboxToken || mapboxToken === 'your_mapbox_token_here') {
       console.error('Mapbox token is required');
-      setMapboxTokenError(true);
+      setHasMapboxTokenError(true);
       return;
     }
 
@@ -84,7 +77,7 @@ export default function MapComponent() {
 
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/light-v11',
+        style: 'mapbox://styles/mapbox/standard',
         center: MEDELLIN_CENTER,
         zoom: INITIAL_ZOOM,
       });
@@ -97,14 +90,14 @@ export default function MapComponent() {
 
       map.current.on('error', (e) => {
         console.error('Mapbox error:', e);
-        setMapboxTokenError(true);
+        setHasMapboxTokenError(true);
       });
 
       // Add navigation controls
       map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
     } catch (error) {
       console.error('Error initializing map:', error);
-      setMapboxTokenError(true);
+      setHasMapboxTokenError(true);
     }
 
     return () => {
@@ -277,6 +270,9 @@ export default function MapComponent() {
           id: 'inder-venues-points',
           type: 'circle',
           source: 'inder-venues',
+          layout: {
+            visibility: layerVisibility.swimming ? 'visible' : 'none',
+          },
           paint: {
             'circle-radius': 12,
             'circle-color': [
@@ -367,11 +363,6 @@ export default function MapComponent() {
     }));
   };
 
-  const handleSearch = () => {
-    // Simple search implementation - in a real app, you'd implement more sophisticated search
-    console.log('Searching for:', searchTerm);
-  };
-
    // Don't render anything until mounted (prevents hydration mismatch)
   if (!isMounted) {
     return (
@@ -391,250 +382,40 @@ export default function MapComponent() {
   }
 
   // Show error state if Mapbox token is not configured
-  if (mapboxTokenError) {
-    return (
-      <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
-        <AppBar position="static">
-          <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              Triatlón Medellín
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Box sx={{ 
-          flex: 1, 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'center',
-          flexDirection: 'column',
-          p: 4,
-          textAlign: 'center'
-        }}>
-          <Typography variant="h4" color="error" gutterBottom>
-            Token de Mapbox Requerido
-          </Typography>
-          <Typography variant="body1" paragraph>
-            Para ver el mapa interactivo, necesitas configurar tu token de Mapbox.
-          </Typography>
-          <Typography variant="body2" paragraph>
-            1. Obtén un token gratuito en{' '}
-            <Link href="https://account.mapbox.com/access-tokens/" target="_blank" rel="noopener noreferrer">
-              mapbox.com
-            </Link>
-          </Typography>
-          <Typography variant="body2" paragraph>
-            2. Añádelo a tu archivo <code>.env.local</code>:
-          </Typography>
-          <Box sx={{ 
-            bgcolor: 'grey.100', 
-            p: 2, 
-            borderRadius: 1, 
-            fontFamily: 'monospace',
-            mb: 2
-          }}>
-            NEXT_PUBLIC_MAPBOX_TOKEN=tu_token_aquí
-          </Box>
-          <Typography variant="body2">
-            3. Reinicia el servidor de desarrollo
-          </Typography>
-        </Box>
-      </Box>
-    );
+  if (hasMapboxTokenError) {
+    return <MapboxTokenError />;
   }
 
   return (
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* AppBar */}
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Triatlón Medellín
-          </Typography>
-          <Button color="inherit" onClick={() => setDataSourcesOpen(true)}>
-            Fuentes de Datos
-          </Button>
-        </Toolbar>
-      </AppBar>
+      <AppBar onDataSourcesClick={() => setDataSourcesOpen(true)} />
 
       {/* Map container with overlay controls */}
       <Box sx={{ position: 'relative', flex: 1 }}>
         <div ref={mapContainer} style={{ width: '100%', height: '100%' }} />
         
-        {/* Filter Panel */}
-        <Paper
-          elevation={3}
-          sx={{
-            position: 'absolute',
-            top: 16,
-            left: 16,
-            p: 2,
-            minWidth: 250,
-            maxWidth: 300,
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Filtros
-          </Typography>
-          
-          <Box sx={{ mb: 2 }}>
-            <TextField
-              fullWidth
-              size="small"
-              placeholder="Buscar lugar..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-            />
-          </Box>
+        {/* Map Controls */}
+        <MapControls
+          layerVisibility={layerVisibility}
+          onLayerToggle={handleLayerToggle}
+        />
 
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.encicla}
-                onChange={() => handleLayerToggle('encicla')}
-                color="primary"
-              />
-            }
-            label="EnCicla (Bicicletas)"
-          />
-          
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.ciclorrutas}
-                onChange={() => handleLayerToggle('ciclorrutas')}
-                color="primary"
-              />
-            }
-            label="Ciclorrutas"
-          />
-          
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.ciclovias}
-                onChange={() => handleLayerToggle('ciclovias')}
-                color="primary"
-              />
-            }
-            label="Ciclovías INDER"
-          />
-          
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.swimming}
-                onChange={() => handleLayerToggle('swimming')}
-                color="primary"
-              />
-            }
-            label="Escenarios Deportivos"
-          />
-        </Paper>
-
-        {/* Legend */}
-        <Paper
-          elevation={3}
-          sx={{
-            position: 'absolute',
-            bottom: 16,
-            left: 16,
-            p: 2,
-            minWidth: 200,
-          }}
-        >
-          <Typography variant="subtitle2" gutterBottom>
-            Leyenda
-          </Typography>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#2196F3' }} />
-              <Typography variant="caption">EnCicla (Bicicletas)</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 20, height: 3, bgcolor: '#4CAF50' }} />
-              <Typography variant="caption">Ciclorrutas</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 20, height: 3, bgcolor: '#FF9800', borderStyle: 'dashed', borderWidth: 1 }} />
-              <Typography variant="caption">Ciclovías</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#00BCD4' }} />
-              <Typography variant="caption">Natación</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#8BC34A' }} />
-              <Typography variant="caption">Atletismo</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-              <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#9C27B0' }} />
-              <Typography variant="caption">Multi-deporte</Typography>
-            </Box>
-          </Box>
-        </Paper>
+        {/* Map Legend */}
+        <MapLegend />
       </Box>
 
       {/* Data Sources Dialog */}
-      <Dialog open={dataSourcesOpen} onClose={() => setDataSourcesOpen(false)} maxWidth="md" fullWidth>
-        <DialogTitle>Fuentes de Datos</DialogTitle>
-        <DialogContent>
-          <Typography variant="body1" paragraph>
-            Esta aplicación utiliza las siguientes fuentes de datos oficiales:
-          </Typography>
-          
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">1. Estaciones EnCicla (AMVA)</Typography>
-            <Typography variant="body2">
-              Fuente: <Link href="https://www.datos.gov.co/resource/hmuf-kqju.json" target="_blank">
-                Portal de Datos Abiertos Colombia - AMVA
-              </Link>
-            </Typography>
-          </Box>
-
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">2. Ciclorrutas Valle de Aburrá</Typography>
-            <Typography variant="body2">
-              Fuente: Área Metropolitana del Valle de Aburrá (AMVA)
-            </Typography>
-          </Box>
-
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">3. Ciclovías INDER</Typography>
-            <Typography variant="body2">
-              Fuente: Instituto de Deportes y Recreación (INDER) - Medellín
-            </Typography>
-          </Box>
-
-          <Box sx={{ mb: 2 }}>
-            <Typography variant="h6">4. Escenarios Deportivos INDER</Typography>
-            <Typography variant="body2">
-              Fuente: <Link href="https://www.datos.gov.co/resource/i5z5-qhf8.json" target="_blank">
-                Portal de Datos Abiertos Colombia - INDER
-              </Link>
-            </Typography>
-          </Box>
-
-          <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-            Los datos se actualizan periódicamente desde las fuentes oficiales.
-          </Typography>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setDataSourcesOpen(false)}>Cerrar</Button>
-        </DialogActions>
-      </Dialog>
+      <DataSourcesDialog
+        open={dataSourcesOpen}
+        onClose={() => setDataSourcesOpen(false)}
+      />
 
       {/* Disclaimer Snackbar */}
-      <Snackbar
+      <DisclaimerSnackbar
         open={snackbarOpen}
-        autoHideDuration={6000}
         onClose={() => setSnackbarOpen(false)}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={() => setSnackbarOpen(false)} severity="info" sx={{ width: '100%' }}>
-          Los datos mostrados provienen de fuentes oficiales y pueden no estar completamente actualizados.
-        </Alert>
-      </Snackbar>
+      />
     </Box>
   );
 }
