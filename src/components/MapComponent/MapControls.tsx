@@ -41,11 +41,11 @@ export default function MapControls({
         position: 'absolute',
         top: isMobile ? 8 : 16,
         left: isMobile ? 8 : 16,
-        right: isMobile ? 60 : 'auto', // Leave space for zoom controls on mobile
-        p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2, // Less padding when collapsed on mobile
-        minWidth: isMobile ? 'auto' : 200,
-        maxWidth: isMobile ? 'auto' : 280,
-        width: isMobile ? 'auto' : 'auto',
+        right: isMobile && !isExpanded ? 'auto' : (isMobile ? 60 : 'auto'), // Dynamic right margin
+        p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2,
+        minWidth: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 200, // Minimal width when collapsed
+        maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : 'fit-content') : 280, // Responsive max width
+        width: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 'auto', // Fit content when collapsed
         zIndex: 1000,
       }}
     >
@@ -53,8 +53,9 @@ export default function MapControls({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: isMobile && !isExpanded ? 'center' : 'space-between',
           mb: isExpanded ? 0.5 : 0,
+          gap: isMobile && !isExpanded ? 0.5 : 1, // Tight spacing when collapsed
         }}
       >
         <Typography 
