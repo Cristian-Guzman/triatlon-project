@@ -28,47 +28,66 @@ export default function MapLegend() {
       elevation={3}
       sx={{
         position: 'absolute',
-        bottom: isMobile ? 40 : 16, // More space on mobile for attribution
+        bottom: isMobile ? 40 : 16,
         left: isMobile ? 8 : 16,
-        right: isMobile ? 8 : 'auto',
-        p: isMobile ? 0.75 : 2,
-        minWidth: isMobile ? 'auto' : 180,
-        maxWidth: isMobile ? 'auto' : 260,
+        right: isMobile && !isExpanded ? 'auto' : (isMobile ? 8 : 'auto'),
+        p: isMobile ? 0.5 : 2, // Consistent padding
+        width: isMobile ? (isExpanded ? 'calc(100vw - 16px)' : '56px') : 'auto', // Same width as controls
+        minWidth: isMobile ? (isExpanded ? 'auto' : '56px') : 180,
+        maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 16px)' : '56px') : 260,
         zIndex: 1000,
       }}
     >
       <Box
+        onClick={isMobile ? toggleExpanded : undefined}
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          mb: isExpanded ? 1 : 0,
+          justifyContent: 'center',
+          mb: isExpanded ? 0.5 : 0,
+          cursor: isMobile ? 'pointer' : 'default',
+          borderRadius: isMobile ? 1 : 0,
+          height: 40, // Same height as controls
+          '&:hover': isMobile ? { 
+            bgcolor: 'action.hover',
+          } : {},
         }}
       >
-        <Typography 
-          variant={isMobile ? 'caption' : 'subtitle2'}
-          sx={{ 
-            display: 'flex', 
-            alignItems: 'center',
-            gap: 0.5,
-          }}
-        >
-          <InfoIcon fontSize={isMobile ? 'small' : 'medium'} />
-          Datos del Mapa
-        </Typography>
+        {/* Show only info icon when collapsed */}
+        {isMobile && !isExpanded ? (
+          <InfoIcon fontSize="small" />
+        ) : (
+          <Typography 
+            variant={isMobile ? 'caption' : 'subtitle2'}
+            sx={{ 
+              display: 'flex', 
+              alignItems: 'center',
+              gap: 0.5,
+              fontWeight: 600,
+            }}
+          >
+            <InfoIcon fontSize={isMobile ? 'small' : 'medium'} />
+            {!isMobile && 'Datos del Mapa'}
+          </Typography>
+        )}
         
-        {isMobile && (
+        {/* Show expand/collapse arrow only when expanded */}
+        {isMobile && isExpanded && (
           <IconButton
             size="small"
             onClick={toggleExpanded}
-            sx={{ p: 0.5 }}
+            sx={{ 
+              ml: 'auto',
+              p: 0.5,
+            }}
           >
-            {isExpanded ? <ExpandLess /> : <ExpandMore />}
+            <ExpandLess />
           </IconButton>
         )}
       </Box>
 
-      <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+      {/* Simple show/hide */}
+      {isExpanded && (
         <Box sx={{ 
           display: 'flex', 
           flexDirection: 'column', 
@@ -99,7 +118,7 @@ export default function MapLegend() {
             <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>Multi-deporte</Typography>
           </Box>
         </Box>
-      </Collapse>
+      )}
     </Paper>
   );
 }

@@ -41,78 +41,64 @@ export default function MapControls({
         position: 'absolute',
         top: isMobile ? 8 : 16,
         left: isMobile ? 8 : 16,
-        right: isMobile && !isExpanded ? 'auto' : (isMobile ? 60 : 'auto'), // Dynamic right margin
-        p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2,
-        minWidth: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 200, // Minimal width when collapsed
-        maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : 'fit-content') : 280, // Responsive max width
-        width: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 'auto',
+        right: isMobile && !isExpanded ? 'auto' : (isMobile ? 60 : 'auto'),
+        p: isMobile ? 0.5 : 2, // Consistent padding
+        width: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : '56px') : 'auto', // Fixed width when collapsed
+        minWidth: isMobile ? (isExpanded ? 'auto' : '56px') : 200,
+        maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : '56px') : 280,
         zIndex: 1000,
-        transition: isExpanded 
-          ? 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' // Smooth expansion
-          : 'width 0.2s cubic-bezier(0.4, 0, 0.6, 1) 0.3s, min-width 0.2s cubic-bezier(0.4, 0, 0.6, 1) 0.3s, max-width 0.2s cubic-bezier(0.4, 0, 0.6, 1) 0.3s', // Delayed width change on collapse
       }}
     >
       <Box
-        onClick={isMobile ? toggleExpanded : undefined} // Make whole box clickable on mobile
+        onClick={isMobile ? toggleExpanded : undefined}
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: isMobile && !isExpanded ? 'center' : 'space-between',
+          justifyContent: 'center',
           mb: isExpanded ? 0.5 : 0,
-          gap: isMobile && !isExpanded ? 0.5 : 1,
-          px: isMobile && !isExpanded ? 1 : 0, // Add horizontal padding when collapsed
           cursor: isMobile ? 'pointer' : 'default',
           borderRadius: isMobile ? 1 : 0,
-          transition: isExpanded 
-            ? 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)' // Smooth expansion
-            : 'justify-content 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0.35s, padding 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0.35s', // Delayed layout change on collapse
+          height: 40, // Fixed height for consistency
           '&:hover': isMobile ? { 
             bgcolor: 'action.hover',
-            transform: 'scale(1.02)', // Subtle scale effect on hover
           } : {},
         }}
       >
-        <Typography 
-          variant={isMobile ? 'subtitle1' : 'h6'} 
-          sx={{ 
-            display: 'flex', 
-            alignItems: 'center',
-            gap: 1,
-            fontWeight: 600,
-          }}
-        >
-          <FilterListIcon fontSize={isMobile ? 'small' : 'medium'} />
-          {(!isMobile || isExpanded) && 'Capas del Mapa'}
-        </Typography>
-        
-        {isMobile && (
-          <IconButton
-            size="medium"
-            onClick={isExpanded ? toggleExpanded : undefined} // Only clickable when expanded (whole box handles collapsed)
+        {/* Show only filter icon when collapsed */}
+        {isMobile && !isExpanded ? (
+          <FilterListIcon fontSize="small" />
+        ) : (
+          <Typography 
+            variant={isMobile ? 'subtitle1' : 'h6'} 
             sx={{ 
-              p: 1,
-              minWidth: 44,
-              minHeight: 44,
-              pointerEvents: isExpanded ? 'auto' : 'none', // Disable when collapsed since box handles it
+              display: 'flex', 
+              alignItems: 'center',
+              gap: 1,
+              fontWeight: 600,
             }}
           >
-            {isExpanded ? <ExpandLess /> : <ExpandMore />}
+            <FilterListIcon fontSize={isMobile ? 'small' : 'medium'} />
+            {!isMobile && 'Capas del Mapa'}
+          </Typography>
+        )}
+        
+        {/* Show expand/collapse arrow only when expanded */}
+        {isMobile && isExpanded && (
+          <IconButton
+            size="small"
+            onClick={toggleExpanded}
+            sx={{ 
+              ml: 'auto',
+              p: 0.5,
+            }}
+          >
+            <ExpandLess />
           </IconButton>
         )}
       </Box>
 
-      <Collapse 
-        in={isExpanded} 
-        timeout={{
-          enter: 400,
-          exit: 300, // Faster exit to coordinate with layout changes
-        }}
-        easing={{
-          enter: 'cubic-bezier(0.4, 0, 0.2, 1)',
-          exit: 'cubic-bezier(0.4, 0, 0.6, 1)',
-        }}
-        unmountOnExit
-      >
+      {/* Simple show/hide without complex animations */}
+      {isExpanded && (
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 0.75 : 1.2 }}>
           
           {/* Cycling Infrastructure Category */}
@@ -244,7 +230,7 @@ export default function MapControls({
           </Box>
 
         </Box>
-      </Collapse>
+      )}
     </Paper>
   );
 }
