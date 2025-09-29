@@ -10,6 +10,8 @@ import {
   Typography,
   Box,
   Link,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 
 interface DataSourcesDialogProps {
@@ -18,8 +20,23 @@ interface DataSourcesDialogProps {
 }
 
 export default function DataSourcesDialog({ open, onClose }: DataSourcesDialogProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog 
+      open={open} 
+      onClose={onClose} 
+      maxWidth="md" 
+      fullWidth
+      fullScreen={isMobile}
+      PaperProps={{
+        sx: {
+          margin: isMobile ? 0 : 2,
+          maxHeight: isMobile ? '100%' : '90vh',
+        }
+      }}
+    >
       <DialogTitle>Fuentes de Datos</DialogTitle>
       <DialogContent>
         <Typography variant="body1" sx={{ mb: 3 }}>

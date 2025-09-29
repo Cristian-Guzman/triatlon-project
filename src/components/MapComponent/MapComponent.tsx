@@ -322,6 +322,7 @@ export default function MapComponent() {
         });
       }
     }
+    console.log(inderData)
   }, [mapLoaded, enciclaData, enciclaLoading, ciclorrutasData, ciclorrutasLoading, cicloviasData, cicloviasLoading, inderData, inderLoading]);
 
   // Handle layer visibility
