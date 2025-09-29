@@ -31,9 +31,9 @@ export default function MapLegend() {
         bottom: isMobile ? 40 : 16, // More space on mobile for attribution
         left: isMobile ? 8 : 16,
         right: isMobile ? 8 : 'auto',
-        p: isMobile ? 1 : 2,
-        minWidth: isMobile ? 'auto' : 200,
-        maxWidth: isMobile ? 'auto' : 300,
+        p: isMobile ? 0.75 : 2,
+        minWidth: isMobile ? 'auto' : 180,
+        maxWidth: isMobile ? 'auto' : 260,
         zIndex: 1000,
       }}
     >
@@ -72,31 +72,31 @@ export default function MapLegend() {
         <Box sx={{ 
           display: 'flex', 
           flexDirection: 'column', 
-          gap: isMobile ? 0.5 : 1,
+          gap: isMobile ? 0.3 : 0.75,
         }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#2196F3' }} />
-            <Typography variant="caption">EnCicla (Bicicletas)</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
+            <Box sx={{ width: isMobile ? 8 : 12, height: isMobile ? 8 : 12, borderRadius: '50%', bgcolor: '#2196F3' }} />
+            <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>EnCicla (Bicicletas)</Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 20, height: 3, bgcolor: '#4CAF50' }} />
-            <Typography variant="caption">Ciclorrutas</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
+            <Box sx={{ width: isMobile ? 16 : 20, height: isMobile ? 2 : 3, bgcolor: '#4CAF50' }} />
+            <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>Ciclorrutas</Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 20, height: 3, bgcolor: '#FF9800', borderStyle: 'dashed', borderWidth: 1 }} />
-            <Typography variant="caption">Ciclovías</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
+            <Box sx={{ width: isMobile ? 16 : 20, height: isMobile ? 2 : 3, bgcolor: '#FF9800', borderStyle: 'dashed', borderWidth: 1 }} />
+            <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>Ciclovías</Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#00BCD4' }} />
-            <Typography variant="caption">Natación</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
+            <Box sx={{ width: isMobile ? 8 : 12, height: isMobile ? 8 : 12, borderRadius: '50%', bgcolor: '#00BCD4' }} />
+            <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>Natación</Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#8BC34A' }} />
-            <Typography variant="caption">Atletismo</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
+            <Box sx={{ width: isMobile ? 8 : 12, height: isMobile ? 8 : 12, borderRadius: '50%', bgcolor: '#8BC34A' }} />
+            <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>Atletismo</Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Box sx={{ width: 12, height: 12, borderRadius: '50%', bgcolor: '#9C27B0' }} />
-            <Typography variant="caption">Multi-deporte</Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: isMobile ? 0.5 : 1 }}>
+            <Box sx={{ width: isMobile ? 8 : 12, height: isMobile ? 8 : 12, borderRadius: '50%', bgcolor: '#9C27B0' }} />
+            <Typography variant="caption" sx={{ fontSize: isMobile ? '0.65rem' : '0.75rem' }}>Multi-deporte</Typography>
           </Box>
         </Box>
       </Collapse>

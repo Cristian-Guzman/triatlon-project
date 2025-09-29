@@ -42,9 +42,9 @@ export default function MapControls({
         top: isMobile ? 8 : 16,
         left: isMobile ? 8 : 16,
         right: isMobile ? 60 : 'auto', // Leave space for zoom controls on mobile
-        p: isMobile ? (isExpanded ? 1 : 0.5) : 2, // Less padding when collapsed on mobile
-        minWidth: isMobile ? 'auto' : 250,
-        maxWidth: isMobile ? 'auto' : 300,
+        p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2, // Less padding when collapsed on mobile
+        minWidth: isMobile ? 'auto' : 200,
+        maxWidth: isMobile ? 'auto' : 280,
         width: isMobile ? 'auto' : 'auto',
         zIndex: 1000,
       }}
@@ -54,7 +54,7 @@ export default function MapControls({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          mb: isExpanded ? 1 : 0,
+          mb: isExpanded ? 0.5 : 0,
         }}
       >
         <Typography 
@@ -82,7 +82,7 @@ export default function MapControls({
       </Box>
 
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 1 : 1.5 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 0.75 : 1.2 }}>
           
           {/* Cycling Infrastructure Category */}
           <Box>
@@ -92,14 +92,15 @@ export default function MapControls({
                 fontWeight: 600, 
                 color: 'text.secondary',
                 textTransform: 'uppercase',
-                letterSpacing: 0.5,
-                mb: 0.5,
-                display: 'block'
+                letterSpacing: 0.3,
+                mb: 0.25,
+                display: 'block',
+                fontSize: isMobile ? '0.65rem' : '0.75rem'
               }}
             >
               Infraestructura Ciclística
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 0.1 : 0.25 }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -107,14 +108,17 @@ export default function MapControls({
                     onChange={() => onLayerToggle('encicla')}
                     color="primary"
                     size="small"
+                    sx={{ transform: isMobile ? 'scale(0.85)' : 'none' }}
                   />
                 }
                 label="EnCicla (Estaciones)"
                 sx={{
                   ml: 0,
+                  mr: 0,
                   '& .MuiFormControlLabel-label': {
-                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
+                    lineHeight: 1.2,
                   },
                 }}
               />
@@ -125,14 +129,17 @@ export default function MapControls({
                     onChange={() => onLayerToggle('ciclorrutas')}
                     color="primary"
                     size="small"
+                    sx={{ transform: isMobile ? 'scale(0.85)' : 'none' }}
                   />
                 }
                 label="Ciclorrutas"
                 sx={{
                   ml: 0,
+                  mr: 0,
                   '& .MuiFormControlLabel-label': {
-                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
+                    lineHeight: 1.2,
                   },
                 }}
               />
@@ -143,14 +150,17 @@ export default function MapControls({
                     onChange={() => onLayerToggle('ciclovias')}
                     color="primary"
                     size="small"
+                    sx={{ transform: isMobile ? 'scale(0.85)' : 'none' }}
                   />
                 }
                 label="Ciclovías Recreativas"
                 sx={{
                   ml: 0,
+                  mr: 0,
                   '& .MuiFormControlLabel-label': {
-                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
+                    lineHeight: 1.2,
                   },
                 }}
               />
@@ -165,14 +175,15 @@ export default function MapControls({
                 fontWeight: 600, 
                 color: 'text.secondary',
                 textTransform: 'uppercase',
-                letterSpacing: 0.5,
-                mb: 0.5,
-                display: 'block'
+                letterSpacing: 0.3,
+                mb: 0.25,
+                display: 'block',
+                fontSize: isMobile ? '0.65rem' : '0.75rem'
               }}
             >
               Escenarios Deportivos
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 0.1 : 0.25 }}>
               <FormControlLabel
                 control={
                   <Switch
@@ -180,14 +191,17 @@ export default function MapControls({
                     onChange={() => onLayerToggle('swimming')}
                     color="primary"
                     size="small"
+                    sx={{ transform: isMobile ? 'scale(0.85)' : 'none' }}
                   />
                 }
                 label="Instalaciones Deportivas"
                 sx={{
                   ml: 0,
+                  mr: 0,
                   '& .MuiFormControlLabel-label': {
-                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
+                    lineHeight: 1.2,
                   },
                 }}
               />
