@@ -31,7 +31,7 @@ export default function MapLegend() {
         bottom: isMobile ? 40 : 16,
         left: isMobile ? 8 : 16,
         right: isMobile && !isExpanded ? 'auto' : (isMobile ? 8 : 'auto'),
-        p: isMobile ? 0.5 : 2, // Consistent padding
+        p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2, // More padding when expanded
         width: isMobile ? (isExpanded ? 'calc(100vw - 16px)' : '56px') : 'auto', // Same width as controls
         minWidth: isMobile ? (isExpanded ? 'auto' : '56px') : 180,
         maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 16px)' : '56px') : 260,
@@ -43,31 +43,36 @@ export default function MapLegend() {
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start', // Always flex-start to keep icon position consistent
+          pl: isExpanded ? 1 : 1.75, // Adjust padding to center icon when collapsed
           mb: isExpanded ? 0.5 : 0,
           cursor: isMobile ? 'pointer' : 'default',
           borderRadius: isMobile ? 1 : 0,
-          height: 40, // Same height as controls
+          height: 40,
           '&:hover': isMobile ? { 
             bgcolor: 'action.hover',
           } : {},
         }}
       >
-        {/* Show only info icon when collapsed */}
-        {isMobile && !isExpanded ? (
-          <InfoIcon fontSize="small" />
-        ) : (
+        {/* Info icon always in same position with consistent styling */}
+        <InfoIcon 
+          fontSize="small" 
+          sx={{ 
+            color: 'text.primary',
+            // Same styling whether collapsed or expanded
+          }} 
+        />
+        
+        {/* Text only shows when expanded */}
+        {isExpanded && (
           <Typography 
             variant={isMobile ? 'caption' : 'subtitle2'}
             sx={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              gap: 0.5,
               fontWeight: 600,
+              ml: 0.5, // Consistent spacing from icon
             }}
           >
-            <InfoIcon fontSize={isMobile ? 'small' : 'medium'} />
-            {!isMobile && 'Datos del Mapa'}
+            Datos del Mapa
           </Typography>
         )}
         

@@ -42,7 +42,7 @@ export default function MapControls({
         top: isMobile ? 8 : 16,
         left: isMobile ? 8 : 16,
         right: isMobile && !isExpanded ? 'auto' : (isMobile ? 60 : 'auto'),
-        p: isMobile ? 0.5 : 2, // Consistent padding
+        p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2, // More padding when expanded
         width: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : '56px') : 'auto', // Fixed width when collapsed
         minWidth: isMobile ? (isExpanded ? 'auto' : '56px') : 200,
         maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : '56px') : 280,
@@ -54,7 +54,8 @@ export default function MapControls({
         sx={{
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start', // Always flex-start to keep icon position consistent
+          pl: isExpanded ? 1 : 1.75, // Adjust padding to center icon when collapsed
           mb: isExpanded ? 0.5 : 0,
           cursor: isMobile ? 'pointer' : 'default',
           borderRadius: isMobile ? 1 : 0,
@@ -64,21 +65,25 @@ export default function MapControls({
           } : {},
         }}
       >
-        {/* Show only filter icon when collapsed */}
-        {isMobile && !isExpanded ? (
-          <FilterListIcon fontSize="small" />
-        ) : (
+        {/* FilterList icon always in same position with consistent styling */}
+        <FilterListIcon 
+          fontSize="small" 
+          sx={{ 
+            color: 'text.primary',
+            // Same styling whether collapsed or expanded
+          }} 
+        />
+        
+        {/* Text only shows when expanded */}
+        {isExpanded && (
           <Typography 
             variant={isMobile ? 'subtitle1' : 'h6'} 
             sx={{ 
-              display: 'flex', 
-              alignItems: 'center',
-              gap: 1,
               fontWeight: 600,
+              ml: 1, // Consistent spacing from icon
             }}
           >
-            <FilterListIcon fontSize={isMobile ? 'small' : 'medium'} />
-            {!isMobile && 'Capas del Mapa'}
+            Capas del Mapa
           </Typography>
         )}
         
