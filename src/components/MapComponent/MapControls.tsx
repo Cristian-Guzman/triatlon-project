@@ -45,8 +45,9 @@ export default function MapControls({
         p: isMobile ? (isExpanded ? 0.75 : 0.5) : 2,
         minWidth: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 200, // Minimal width when collapsed
         maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : 'fit-content') : 280, // Responsive max width
-        width: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 'auto', // Fit content when collapsed
+        width: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 'auto',
         zIndex: 1000,
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Smooth transitions for size changes
       }}
     >
       <Box
@@ -58,9 +59,13 @@ export default function MapControls({
           mb: isExpanded ? 0.5 : 0,
           gap: isMobile && !isExpanded ? 0.5 : 1,
           px: isMobile && !isExpanded ? 1 : 0, // Add horizontal padding when collapsed
-          cursor: isMobile ? 'pointer' : 'default', // Show it's clickable
-          borderRadius: isMobile ? 1 : 0, // Subtle visual feedback
-          '&:hover': isMobile ? { bgcolor: 'action.hover' } : {}, // Hover effect on mobile
+          cursor: isMobile ? 'pointer' : 'default',
+          borderRadius: isMobile ? 1 : 0,
+          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Smooth transitions for all properties
+          '&:hover': isMobile ? { 
+            bgcolor: 'action.hover',
+            transform: 'scale(1.02)', // Subtle scale effect on hover
+          } : {},
         }}
       >
         <Typography 
@@ -92,7 +97,15 @@ export default function MapControls({
         )}
       </Box>
 
-      <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+      <Collapse 
+        in={isExpanded} 
+        timeout={400} 
+        easing={{
+          enter: 'cubic-bezier(0.4, 0, 0.2, 1)',
+          exit: 'cubic-bezier(0.4, 0, 0.6, 1)',
+        }}
+        unmountOnExit
+      >
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 0.75 : 1.2 }}>
           
           {/* Cycling Infrastructure Category */}
