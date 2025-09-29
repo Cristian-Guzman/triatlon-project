@@ -50,12 +50,17 @@ export default function MapControls({
       }}
     >
       <Box
+        onClick={isMobile ? toggleExpanded : undefined} // Make whole box clickable on mobile
         sx={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: isMobile && !isExpanded ? 'center' : 'space-between',
           mb: isExpanded ? 0.5 : 0,
-          gap: isMobile && !isExpanded ? 0.5 : 1, // Tight spacing when collapsed
+          gap: isMobile && !isExpanded ? 0.5 : 1,
+          px: isMobile && !isExpanded ? 1 : 0, // Add horizontal padding when collapsed
+          cursor: isMobile ? 'pointer' : 'default', // Show it's clickable
+          borderRadius: isMobile ? 1 : 0, // Subtle visual feedback
+          '&:hover': isMobile ? { bgcolor: 'action.hover' } : {}, // Hover effect on mobile
         }}
       >
         <Typography 
@@ -74,11 +79,12 @@ export default function MapControls({
         {isMobile && (
           <IconButton
             size="medium"
-            onClick={toggleExpanded}
+            onClick={isExpanded ? toggleExpanded : undefined} // Only clickable when expanded (whole box handles collapsed)
             sx={{ 
               p: 1,
               minWidth: 44,
-              minHeight: 44, // Minimum touch target size
+              minHeight: 44,
+              pointerEvents: isExpanded ? 'auto' : 'none', // Disable when collapsed since box handles it
             }}
           >
             {isExpanded ? <ExpandLess /> : <ExpandMore />}
