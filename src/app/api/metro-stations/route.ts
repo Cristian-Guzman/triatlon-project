@@ -34,7 +34,6 @@ export async function GET() {
       ],
     };
 
-    console.log(`Metro: Found ${metroStations.features.length} stations`);
     return NextResponse.json(metroStations);
   } catch (error) {
     console.error('Error fetching Metro stations:', error);

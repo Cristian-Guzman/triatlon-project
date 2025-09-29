@@ -65,10 +65,6 @@ export async function GET() {
         }),
     };
 
-    console.log(`INDER: Found ${geojson.features.length} venues`);
-    console.log(`Swimming: ${geojson.features.filter(f => f.properties.type === 'swim').length}`);
-    console.log(`Running: ${geojson.features.filter(f => f.properties.type === 'run').length}`);
-    console.log(`Multi: ${geojson.features.filter(f => f.properties.type === 'multi').length}`);
     
     return NextResponse.json(geojson);
   } catch (error) {
