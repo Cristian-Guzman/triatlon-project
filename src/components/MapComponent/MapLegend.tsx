@@ -54,7 +54,7 @@ export default function MapLegend() {
           }}
         >
           <InfoIcon fontSize={isMobile ? 'small' : 'medium'} />
-          Leyenda
+          Datos del Mapa
         </Typography>
         
         {isMobile && (

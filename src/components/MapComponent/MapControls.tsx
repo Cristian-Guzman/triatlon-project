@@ -63,10 +63,11 @@ export default function MapControls({
             display: 'flex', 
             alignItems: 'center',
             gap: 1,
+            fontWeight: 600,
           }}
         >
           <FilterListIcon fontSize={isMobile ? 'small' : 'medium'} />
-          Filtros
+          Capas del Mapa
         </Typography>
         
         {isMobile && (
@@ -81,84 +82,118 @@ export default function MapControls({
       </Box>
 
       <Collapse in={isExpanded} timeout="auto" unmountOnExit>
-        <Box
-          sx={{
-            display: 'flex',
-            flexDirection: isMobile ? 'column' : 'column',
-            gap: isMobile ? 0.5 : 1,
-          }}
-        >
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.encicla}
-                onChange={() => onLayerToggle('encicla')}
-                color="primary"
-                size={isMobile ? 'small' : 'medium'}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 1 : 1.5 }}>
+          
+          {/* Cycling Infrastructure Category */}
+          <Box>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                fontWeight: 600, 
+                color: 'text.secondary',
+                textTransform: 'uppercase',
+                letterSpacing: 0.5,
+                mb: 0.5,
+                display: 'block'
+              }}
+            >
+              Infraestructura Ciclística
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={layerVisibility.encicla}
+                    onChange={() => onLayerToggle('encicla')}
+                    color="primary"
+                    size="small"
+                  />
+                }
+                label="EnCicla (Estaciones)"
+                sx={{
+                  ml: 0,
+                  '& .MuiFormControlLabel-label': {
+                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontWeight: 400,
+                  },
+                }}
               />
-            }
-            label="EnCicla (Bicicletas)"
-            sx={{
-              fontSize: isMobile ? '0.875rem' : '1rem',
-              '& .MuiFormControlLabel-label': {
-                fontSize: isMobile ? '0.875rem' : '1rem',
-              },
-            }}
-          />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={layerVisibility.ciclorrutas}
+                    onChange={() => onLayerToggle('ciclorrutas')}
+                    color="primary"
+                    size="small"
+                  />
+                }
+                label="Ciclorrutas"
+                sx={{
+                  ml: 0,
+                  '& .MuiFormControlLabel-label': {
+                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontWeight: 400,
+                  },
+                }}
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={layerVisibility.ciclovias}
+                    onChange={() => onLayerToggle('ciclovias')}
+                    color="primary"
+                    size="small"
+                  />
+                }
+                label="Ciclovías Recreativas"
+                sx={{
+                  ml: 0,
+                  '& .MuiFormControlLabel-label': {
+                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontWeight: 400,
+                  },
+                }}
+              />
+            </Box>
+          </Box>
 
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.ciclorrutas}
-                onChange={() => onLayerToggle('ciclorrutas')}
-                color="primary"
-                size={isMobile ? 'small' : 'medium'}
+          {/* Sports Facilities Category */}
+          <Box>
+            <Typography 
+              variant="caption" 
+              sx={{ 
+                fontWeight: 600, 
+                color: 'text.secondary',
+                textTransform: 'uppercase',
+                letterSpacing: 0.5,
+                mb: 0.5,
+                display: 'block'
+              }}
+            >
+              Escenarios Deportivos
+            </Typography>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.25 }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={layerVisibility.swimming}
+                    onChange={() => onLayerToggle('swimming')}
+                    color="primary"
+                    size="small"
+                  />
+                }
+                label="Instalaciones Deportivas"
+                sx={{
+                  ml: 0,
+                  '& .MuiFormControlLabel-label': {
+                    fontSize: isMobile ? '0.8rem' : '0.875rem',
+                    fontWeight: 400,
+                  },
+                }}
               />
-            }
-            label="Ciclorrutas"
-            sx={{
-              fontSize: isMobile ? '0.875rem' : '1rem',
-              '& .MuiFormControlLabel-label': {
-                fontSize: isMobile ? '0.875rem' : '1rem',
-              },
-            }}
-          />
+            </Box>
+          </Box>
 
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.ciclovias}
-                onChange={() => onLayerToggle('ciclovias')}
-                color="primary"
-                size={isMobile ? 'small' : 'medium'}
-              />
-            }
-            label="Ciclovías INDER"
-            sx={{
-              fontSize: isMobile ? '0.875rem' : '1rem',
-              '& .MuiFormControlLabel-label': {
-                fontSize: isMobile ? '0.875rem' : '1rem',
-              },
-            }}
-          />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={layerVisibility.swimming}
-                onChange={() => onLayerToggle('swimming')}
-                color="primary"
-                size={isMobile ? 'small' : 'medium'}
-              />
-            }
-            label="Escenarios Deportivos"
-            sx={{
-              fontSize: isMobile ? '0.875rem' : '1rem',
-              '& .MuiFormControlLabel-label': {
-                fontSize: isMobile ? '0.875rem' : '1rem',
-              },
-            }}
-          />
         </Box>
       </Collapse>
     </Paper>
