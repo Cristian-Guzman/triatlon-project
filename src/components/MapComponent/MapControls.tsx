@@ -47,7 +47,9 @@ export default function MapControls({
         maxWidth: isMobile ? (isExpanded ? 'calc(100vw - 120px)' : 'fit-content') : 280, // Responsive max width
         width: isMobile ? (isExpanded ? 'auto' : 'fit-content') : 'auto',
         zIndex: 1000,
-        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)', // Smooth transitions for size changes
+        transition: isExpanded 
+          ? 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)' // Smooth expansion
+          : 'width 0.2s cubic-bezier(0.4, 0, 0.6, 1) 0.3s, min-width 0.2s cubic-bezier(0.4, 0, 0.6, 1) 0.3s, max-width 0.2s cubic-bezier(0.4, 0, 0.6, 1) 0.3s', // Delayed width change on collapse
       }}
     >
       <Box
@@ -61,7 +63,9 @@ export default function MapControls({
           px: isMobile && !isExpanded ? 1 : 0, // Add horizontal padding when collapsed
           cursor: isMobile ? 'pointer' : 'default',
           borderRadius: isMobile ? 1 : 0,
-          transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)', // Smooth transitions for all properties
+          transition: isExpanded 
+            ? 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)' // Smooth expansion
+            : 'justify-content 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0.35s, padding 0.15s cubic-bezier(0.4, 0, 0.6, 1) 0.35s', // Delayed layout change on collapse
           '&:hover': isMobile ? { 
             bgcolor: 'action.hover',
             transform: 'scale(1.02)', // Subtle scale effect on hover
@@ -99,7 +103,10 @@ export default function MapControls({
 
       <Collapse 
         in={isExpanded} 
-        timeout={400} 
+        timeout={{
+          enter: 400,
+          exit: 300, // Faster exit to coordinate with layout changes
+        }}
         easing={{
           enter: 'cubic-bezier(0.4, 0, 0.2, 1)',
           exit: 'cubic-bezier(0.4, 0, 0.6, 1)',
