@@ -53,7 +53,6 @@ export async function GET() {
         .filter((feature): feature is NonNullable<typeof feature> => feature !== null),
     };
 
-    console.log(`EnCicla: Found ${geojson.features.length} stations`);
     return NextResponse.json(geojson);
   } catch (error) {
     console.error('Error fetching EnCicla stations:', error);
