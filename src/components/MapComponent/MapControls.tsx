@@ -67,14 +67,18 @@ export default function MapControls({
           }}
         >
           <FilterListIcon fontSize={isMobile ? 'small' : 'medium'} />
-          Capas del Mapa
+          {(!isMobile || isExpanded) && 'Capas del Mapa'}
         </Typography>
         
         {isMobile && (
           <IconButton
-            size="small"
+            size="medium"
             onClick={toggleExpanded}
-            sx={{ p: 0.5 }}
+            sx={{ 
+              p: 1,
+              minWidth: 44,
+              minHeight: 44, // Minimum touch target size
+            }}
           >
             {isExpanded ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
@@ -115,6 +119,7 @@ export default function MapControls({
                 sx={{
                   ml: 0,
                   mr: 0,
+                  minHeight: isMobile ? 40 : 'auto', // Better touch target
                   '& .MuiFormControlLabel-label': {
                     fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
@@ -136,6 +141,7 @@ export default function MapControls({
                 sx={{
                   ml: 0,
                   mr: 0,
+                  minHeight: isMobile ? 40 : 'auto', // Better touch target
                   '& .MuiFormControlLabel-label': {
                     fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
@@ -157,6 +163,7 @@ export default function MapControls({
                 sx={{
                   ml: 0,
                   mr: 0,
+                  minHeight: isMobile ? 40 : 'auto', // Better touch target
                   '& .MuiFormControlLabel-label': {
                     fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
@@ -181,7 +188,7 @@ export default function MapControls({
                 fontSize: isMobile ? '0.65rem' : '0.75rem'
               }}
             >
-              Escenarios Deportivos
+              Deportes
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: isMobile ? 0.1 : 0.25 }}>
               <FormControlLabel
@@ -198,6 +205,7 @@ export default function MapControls({
                 sx={{
                   ml: 0,
                   mr: 0,
+                  minHeight: isMobile ? 40 : 'auto', // Better touch target
                   '& .MuiFormControlLabel-label': {
                     fontSize: isMobile ? '0.75rem' : '0.8rem',
                     fontWeight: 400,
